@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blinkit – Online Grocery</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff
+    }
+
+    button,
+    input {
+      font: inherit
+    }
+
+    .topbar {
+      height: 88px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 max(calc((100% - 1200px)/2), 24px);
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 5
+    }
+
+    .brand {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -1.8px;
+      color: var(--yellow);
+      white-space: nowrap
+    }
+
+    .delivery {
+      min-width: 142px;
+      border-left: 1px solid #eee;
+      padding-left: 24px
+    }
+
+    .delivery strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px
+    }
+
+    .delivery span {
+      font-size: 11px;
+      color: #666;
+      white-space: nowrap
+    }
+
+    .search {
+      height: 48px;
+      background: #f7f7f7;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      flex: 1;
+      min-width: 120px;
+      gap: 10px
+    }
+
+    .search span {
+      font-size: 20px;
+      color: #555
+    }
+
+    .search input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      width: 100%;
+      font-size: 14px
+    }
+
+    .login {
+      border: 0;
+      background: transparent;
+      font-size: 14px;
+      padding: 12px;
+      cursor: pointer
+    }
+
+    .cart {
+      border: 0;
+      background: #f4f4f4;
+      color: #555;
+      border-radius: 9px;
+      padding: 13px 17px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 10px auto 50px;
+      padding: 0 16px
+    }
+
+    .hero {
+      height: 180px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 24px 30px;
+      background: linear-gradient(90deg, #237b3a 0%, #3c934a 48%, #dcefcf 100%);
+      color: white
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 57%
+    }
+
+    .hero h1 {
+      font-size: 30px;
+      line-height: 1.15;
+      margin-bottom: 8px
+    }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.35;
+      color: #e7f4e9;
+      margin-bottom: 14px
+    }
+
+    .shop {
+      border: 0;
+      background: #fff;
+      color: #333;
+      border-radius: 4px;
+      padding: 7px 13px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .hero img {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 49%;
+      height: 100%;
+      object-fit: cover;
+      mix-blend-mode: normal
+    }
+
+    .promos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0
+    }
+
+    .promo {
+      height: 118px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      padding: 14px 12px;
+      color: white;
+      display: flex;
+      align-items: center
+    }
+
+    .promo h2 {
+      font-size: 17px;
+      line-height: 1.08;
+      max-width: 56%;
+      margin-bottom: 6px
+    }
+
+    .promo p {
+      font-size: 11px;
+      max-width: 58%;
+      margin-bottom: 10px
+    }
+
+    .promo button {
+      border: 0;
+      border-radius: 5px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .promo img {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 48%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .promo.pharmacy {
+      background: #00b8b0
+    }
+
+    .promo.pets {
+      background: #ffca27;
+      color: #333
+    }
+
+    .promo.baby {
+      background: #e9eef5;
+      color: #333
+    }
+
+    .promo.pharmacy button {
+      background: #fff;
+      color: #333
+    }
+
+    .promo.pets button,
+    .promo.baby button {
+      background: #333;
+      color: #fff
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 24px 0 14px
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 14px 12px
+    }
+
+    .category {
+      border: 0;
+      background: transparent;
+      text-align: center;
+      cursor: pointer;
+      min-width: 0
+    }
+
+    .category .thumb {
+      height: 76px;
+      border-radius: 10px;
+      background: #f0f6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 8px
+    }
+
+    .category img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 5px;
+      transition: transform .2s
+    }
+
+    .category:hover img {
+      transform: scale(1.08)
+    }
+
+    .category span {
+      font-size: 11px;
+      line-height: 1.25;
+      display: block;
+      color: #333
+    }
+    @media(max-width:900px) {
+      .topbar {
+        gap: 12px;
+        padding: 0 14px
+      }
+
+      .delivery {
+        padding-left: 12px;
+        min-width: 120px
+      }
+
+      .hero h1 {
+        font-size: 25px
+      }
+
+      .hero p {
+        font-size: 15px
+      }
+
+      .categories {
+        grid-template-columns: repeat(5, 1fr)
+      }
+
+      .products {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    @media(max-width:600px) {
+      .topbar {
+        height: auto;
+        min-height: 70px;
+        flex-wrap: wrap;
+        padding: 12px;
+        gap: 10px
+      }
+
+      .brand {
+        font-size: 25px
+      }
+
+      .delivery {
+        border: 0;
+        padding-left: 4px;
+        min-width: 0;
+        flex: 1
+      }
+
+      .delivery strong {
+        font-size: 12px
+      }
+
+      .delivery span {
+        font-size: 10px
+      }
+
+      .search {
+        order: 5;
+        flex-basis: 100%;
+        height: 42px
+      }
+
+      .login {
+        padding: 8px
+      }
+
+      .cart {
+        padding: 10px
+      }
+
+      .hero {
+        height: 220px;
+        padding: 18px
+      }
+
+      .hero-copy {
+        max-width: 70%
+      }
+
+      .hero h1 {
+        font-size: 23px
+      }
+
+      .hero p {
+        font-size: 13px
+      }
+
+      .hero img {
+        width: 52%;
+        opacity: .72
+      }
+
+      .promos {
+        grid-template-columns: 1fr;
+        gap: 10px
+      }
+
+      .promo {
+        height: 108px
+      }
+
+      .categories {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px 8px
+      }
+
+      .category .thumb {
+        height: 68px
+      }
+
+      .products {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">blinkit</div>
+    <div class="delivery"><strong>Delivery in 17 minutes</strong><span>XYJF+5X9, NH 58, Meerut, Utta… ▾</span></div>
+    <label class="search"><span>⌕</span><input id="searchInput" placeholder='Search "chocolate"' /></label>
+    <button class="login">Login</button>
+    <button class="cart">🛒 My Cart</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Stock up on daily essentials</h1>
+        <p>Get farm-fresh goodness a range of exotic<br>fruits, vegetables, eggs more</p>
+        <button class="shop">Shop Now</button>
+      </div>
+      <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=85"
+        alt="Fresh vegetables and groceries">
+    </section>
+
+    <section class="promos">
+      <article class="promo pharmacy">
+        <div>
+          <h2>Pharmacy at<br>your doorstep!</h2>
+          <p>Cough syrups, pain relief sprays more</p><button>Order
+            Now</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=400&q=80"
+          alt="Pharmacy products">
+      </article>
+      <article class="promo pets">
+        <div>
+          <h3>Pet care<br>supplies at<br>your door</h3>
+          <p>Food, treats, toys more</p><button>Order Now</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=400&q=80"
+          alt="Pets">
+      </article>
+      <article class="promo baby">
+        <div>
+          <h3>No time <br>for a diaper run?</h3>
+          <p>Get baby care essentials</p><button>Order Now</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80"
+          alt="Baby care">
+      </article>
+    </section>
+
+    <h2 class="section-title">Shop by category</h2>
+    <section class="categories" id="categories">
+      <button class="category" data-name="Paan Corner">
+        <div class="thumb"> <img
+            src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Paan<br>Corner</span>
+      </button>
+      <button class="category" data-name="Dairy Bread Eggs">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Dairy, Bread<br>Eggs</span>
+      </button>
+      <button class="category" data-name="Fruits Vegetables">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Fruits<br>Vegetables</span>
+      </button>
+      <button class="category" data-name="Cold Drinks Juices">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Cold Drinks<br>Juices</span>
+      </button>
+      <button class="category" data-name="Snacks Munchies">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Snacks<br>Munchies</span>
+      </button>
+      <button class="category" data-name="Breakfast Instant Food">
+        <div class="thumb">🥣</div><span>Breakfast<br>Instant Food</span>
+      </button>
+      <button class="category" data-name="Sweet Tooth">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Sweet<br>Tooth</span>
+      </button>
+      <button class="category" data-name="Bakery Biscuits">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Bakery<br>Biscuits</span>
+      </button>
+      <button class="category" data-name="Tea Coffee Milk Drinks">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Tea, Coffee<br>Milk Drinks</span>
+      </button>
+      <button class="category" data-name="Atta Rice Dal">
+        <div class="thumb"><img
+            src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=180&q=80" alt="">
+        </div><span>Atta, Rice<br>Dal</span>
+      </button>
+    </section>
+  </main>
+</body>
+</html>
